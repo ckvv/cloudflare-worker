@@ -1,0 +1,12 @@
+# :schema node_modules/wrangler/config-schema.json
+name = "files"
+main = "src/index.ts"
+compatibility_date = "2024-10-29"
+compatibility_flags = [ "nodejs_compat" ]
+
+[[r2_buckets]]
+binding = 'MY_BUCKET'
+bucket_name = 'files'
+
+[observability.logs]
+enabled = true
