@@ -1,4 +1,4 @@
-import type { R2Bucket } from '@cloudflare/workers-types'
+import { type R2Bucket } from '@cloudflare/workers-types'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 
