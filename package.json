@@ -1,6 +1,6 @@
 {
   "name": "files",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "packageManager": "pnpm@9.12.0+sha512.4abf725084d7bcbafbd728bfc7bee61f2f791f977fd87542b3579dcb23504d170d46337945e4c66485cd12d588a0c0e570ed9c477e7ccdd8507cf05f3f92eaca",
   "author": "ckvv",
@@ -14,10 +14,10 @@
     "hono": "^4.6.8"
   },
   "devDependencies": {
-    "typescript": "^5.7.2",
     "@antfu/eslint-config": "^3.12.1",
     "@cloudflare/workers-types": "^4.20241224.0",
     "eslint": "^9.17.0",
+    "typescript": "^5.7.2",
     "wrangler": "^3.99.0"
   }
 }
