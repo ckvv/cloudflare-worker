@@ -1,4 +1,4 @@
-import type { R2Bucket } from '@cloudflare/workers-types';
+import { type R2Bucket } from '@cloudflare/workers-types';
 import { Hono } from 'hono'
 import { cors } from 'hono/cors';
 
@@ -33,7 +33,14 @@ app.get('/', async(c) => {
 
 app.post('/:key{.+}', async(c) => {
   const body = await c.req.parseBody()
-  await c.env.MY_BUCKET.put(c.req.param('key'), body['file']);
+  await c.env.MY_BUCKET.put(c.req.param('key'), body['file'] as any, {
+    httpMetadata: new Headers({
+      'name': 'ck',
+    }) as any,
+    customMetadata: {
+      'age': '18',
+    },
+  });
   return c.json({});
 })
 
@@ -44,7 +51,7 @@ app.delete('/:key{.+}', async(c) => {
 
 app.get('/:key{.+}', async (c) => {
   const result = await c.env.MY_BUCKET.get(c.req.param('key'))
-  return c.body(result?.body);
+  return c.body(result?.body as any);
 })
 
 export default app
