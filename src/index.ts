@@ -24,9 +24,11 @@ app.get('/', async(c) => {
     delimiter,
     startAfter,
   });
-  return c.json(result.objects.map(object => {
-    
-  }));
+  return c.json(result.objects.map(object => ({
+    key: object.key,
+    size: object.size,
+    uploaded: object.uploaded,
+  })));
 })
 
 app.post('/:key{.+}', async(c) => {
