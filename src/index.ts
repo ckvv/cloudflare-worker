@@ -10,11 +10,11 @@ const SCHEMA = {
     cursor: z.string().optional(),
     delimiter: z.string().optional(),
     startAfter: z.string().optional(),
-  }),
+  }).optional(),
   R2PutOptions: z.object({
     storageClass: z.enum(['Standard', 'InfrequentAccess']).optional(),
-  }),
-  R2GetOptions: z.any(),
+  }).optional(),
+  R2GetOptions: z.any().optional(),
 }
 
 interface Bindings {
@@ -49,15 +49,19 @@ app.get('/', async (c) => {
 
 app.post('/:key{.+}', async (c) => {
   const body = await c.req.parseBody()
-  const file = body.file as File
+  const file = body.file as File;
+  const key = c.req.param('key');
   const options = SCHEMA.R2PutOptions.parse(body.options);
-  await c.env.MY_BUCKET.put(c.req.param('key'), file as any, {
-    storageClass: options.storageClass,
+  await c.env.MY_BUCKET.put(key, file as any, {
+    storageClass: options?.storageClass,
     customMetadata: {
       filename: encodeURIComponent(file.name),
     },
   })
-  return c.json({})
+  return c.json({
+    size: file.size,
+    key,
+  });
 })
 
 app.delete('/:key{.+}', async (c) => {
