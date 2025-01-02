@@ -19,6 +19,7 @@ const SCHEMA = {
 
 interface Bindings {
   MY_BUCKET: R2Bucket
+  password: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -64,6 +65,10 @@ app.post('/:key{.+}', async (c) => {
 })
 
 app.delete('/:key{.+}', async (c) => {
+  const auth = c.req.header('Authorization');
+  if(c.env.password && auth !== c.env.password) {
+    throw new Error('password error');
+  }
   await c.env.MY_BUCKET.delete(c.req.param('key'))
   return c.json({})
 })
