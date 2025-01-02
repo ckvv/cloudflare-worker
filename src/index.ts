@@ -71,6 +71,9 @@ app.delete('/:key{.+}', async (c) => {
 app.get('/:key{.+}', async (c) => {
   const result: any = await c.env.MY_BUCKET.get(c.req.param('key'), SCHEMA.R2GetOptions.parse(c.req.query()))
 
+  if(!result) {
+    return c.body( null, 404)
+  }
   const filename = result?.customMetadata?.filename
   if (filename) {
     c.header('Content-Disposition', `inline; filename="${encodeURIComponent(filename)}"`)
