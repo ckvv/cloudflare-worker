@@ -10,3 +10,7 @@ bucket_name = 'files'
 
 [observability.logs]
 enabled = true
+
+[[routes]]
+pattern = "files.mapplat.com"
+custom_domain = true
