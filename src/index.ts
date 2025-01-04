@@ -25,6 +25,7 @@ interface Bindings {
 const app = new Hono<{ Bindings: Bindings }>()
 
 app.onError((error, c) => {
+  console.log(error);
   return c.json({
     success: false,
     error,
