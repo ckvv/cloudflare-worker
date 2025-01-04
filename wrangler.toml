@@ -12,5 +12,5 @@ bucket_name = 'files'
 enabled = true
 
 [[routes]]
-pattern = "files.mapplat.com"
+pattern = "files.ckvv.net"
 custom_domain = true
