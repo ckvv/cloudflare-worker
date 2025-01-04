@@ -1,7 +1,7 @@
-import { type R2Bucket } from '@cloudflare/workers-types'
+import type { R2Bucket } from '@cloudflare/workers-types'
 import { Hono } from 'hono'
-import { z } from 'zod'
 import { cors } from 'hono/cors'
+import { z } from 'zod'
 
 const SCHEMA = {
   R2ListOptions: z.object({
@@ -55,6 +55,7 @@ app.post('/:key{.+}', async (c) => {
   await c.env.MY_BUCKET.put(key, file as any, {
     storageClass: options?.storageClass,
     customMetadata: {
+      type: file.type,
       filename: encodeURIComponent(file.name),
     },
   })
@@ -74,7 +75,7 @@ app.delete('/:key{.+}', async (c) => {
 })
 
 app.get('/:key{.+}', async (c) => {
-  const result: any = await c.env.MY_BUCKET.get(c.req.param('key'), SCHEMA.R2GetOptions.parse(c.req.query()))
+  const result = await c.env.MY_BUCKET.get(c.req.param('key'), SCHEMA.R2GetOptions.parse(c.req.query()))
 
   if(!result) {
     return c.body( null, 404)
@@ -83,7 +84,9 @@ app.get('/:key{.+}', async (c) => {
   if (filename) {
     c.header('Content-Disposition', `inline; filename="${encodeURIComponent(filename)}"`)
   }
-  return c.body(result?.body)
+
+  c.header('Content-Type', result?.customMetadata?.type)
+  return c.body((result as any).body)
 })
 
 export default app
