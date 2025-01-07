@@ -1,4 +1,4 @@
-import type { BlankEnv } from '../type'
+import type { BlankEnv } from '../type.js'
 import { Hono } from 'hono'
 import { z } from 'zod'
 
