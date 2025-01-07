@@ -19,6 +19,6 @@ app.use(
   }),
 )
 
-app.route('/api/r2', r2)
+app.route('/r2', r2)
 
 export default app
