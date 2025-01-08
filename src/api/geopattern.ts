@@ -55,9 +55,7 @@ app.get('/', async (c) => {
 
   const BG = document.querySelector('#geo-pattern')
   function makePattern(value = '') {
-    BG.style.backgroundImage = GeoPattern.generate(value, {
-      color: '#3231aa',
-    }).toDataUrl()
+    BG.style.backgroundImage = GeoPattern.generate(value).toDataUrl()
   }
 
   document.querySelector('#geo-pattern-input').addEventListener('input', (e) => {
