@@ -47,6 +47,9 @@ app.get('/', async (c) => {
 
 <body>
   <div id="geo-pattern">
+    <a href="https://github.com/ckpack/geopattern" target="_blank" style="display: inline-block; background-color: white; position: fixed; top: 1rem; right: 1rem; padding: .2rem .4rem;">
+      Github
+    </a>
     <input id="geo-pattern-input" onchange="handlerChange" />
   </div>
 </body>
