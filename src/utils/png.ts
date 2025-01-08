@@ -57,7 +57,6 @@ export async function createPng(width: number, height: number, color: { r: numbe
         rawImageData.push(color.r, color.g, color.b) // RGB
       }
     }
-    // const compressedData = zlib.deflateSync(Buffer.from(rawImageData))
     const compressedData = await deflate(Buffer.from(rawImageData))
 
     return createChunk('IDAT', compressedData)
