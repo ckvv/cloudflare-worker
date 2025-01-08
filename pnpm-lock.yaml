@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@ckpack/geopattern':
+        specifier: 0.0.2
+        version: 0.0.2
       hono:
         specifier: ^4.6.16
         version: 4.6.16
@@ -105,6 +108,9 @@ packages:
   '@babel/types@7.26.3':
     resolution: {integrity: sha512-vN5p+1kl59GVKMvTHt55NzzmYVxprfJD+ql7U9NFIfKCBkYE55LYtS+WtPlaYOyzydrKI8Nezd+aZextrd+FMA==}
     engines: {node: '>=6.9.0'}
+
+  '@ckpack/geopattern@0.0.2':
+    resolution: {integrity: sha512-ltLJGTO9fVk697i+Hxj18ia/M4cAwpzZ+a9XUUVwp0TPByD+K/txz1VjUqNLWL9skB93VCfKw7sN+za15dWIOA==}
 
   '@clack/core@0.4.0':
     resolution: {integrity: sha512-YJCYBsyJfNDaTbvDUVSJ3SgSuPrcujarRgkJ5NLjexDZKvaOiVVJvAQYx8lIgG0qRT8ff0fPgqyBCVivanIZ+A==}
@@ -1842,6 +1848,8 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.25.9
       '@babel/helper-validator-identifier': 7.25.9
+
+  '@ckpack/geopattern@0.0.2': {}
 
   '@clack/core@0.4.0':
     dependencies:

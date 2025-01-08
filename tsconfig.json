@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "resolveJsonModule": true,
     "lib": ["ESNext", "dom"],
     "module": "NodeNext",
     "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
     "strict": true
   },
   "include": ["src/**/*.ts"]

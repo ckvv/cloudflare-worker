@@ -1,7 +1,8 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import packageJSON from '../package.json' assert { type: 'json' }
+import geopattern from './api/geopattern.js'
 import r2 from './api/r2.js'
-import packageJSON from '../package.json' assert { type: 'json' };
 
 const app = new Hono()
 
@@ -21,7 +22,8 @@ app.use(
 )
 
 app.route('/r2', r2)
-app.get('/', async (c) => c.json({
+app.route('/pattern', geopattern)
+app.get('/', async c => c.json({
   name: packageJSON.name,
   version: packageJSON.version,
 }))
