@@ -1,6 +1,8 @@
 import { Buffer } from 'node:buffer'
+import { promisify } from 'node:util'
 import zlib from 'node:zlib'
 
+const deflate = promisify(zlib.deflate)
 // 计算 CRC32 校验
 function calculateCRC(buffer: Buffer) {
   const table = []
@@ -19,7 +21,17 @@ function calculateCRC(buffer: Buffer) {
   return (crc ^ 0xFFFFFFFF) >>> 0 // 保证结果是无符号整数
 }
 
-export function createPng(width: number, height: number, color: { r: number, g: number, b: number }) {
+function createChunk(type: string, data: Buffer) {
+  const chunk = Buffer.alloc(12 + data.length)
+  chunk.writeUInt32BE(data.length, 0) // 数据长度
+  chunk.write(type, 4) // 数据块类型
+  data.copy(chunk, 8) // 数据内容
+  const crc = calculateCRC(chunk.subarray(4, 8 + data.length)) // 计算 CRC 校验
+  chunk.writeUInt32BE(crc, 8 + data.length) // 写入 CRC
+  return chunk
+}
+
+export async function createPng(width: number, height: number, color: { r: number, g: number, b: number }) {
   // PNG 文件头
   const pngSignature = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
 
@@ -37,7 +49,7 @@ export function createPng(width: number, height: number, color: { r: number, g: 
   })()
 
   // 图像数据 (IDAT 数据块)
-  const idatChunk = (() => {
+  const idatChunk = (async () => {
     const rawImageData = []
     for (let y = 0; y < height; y++) {
       rawImageData.push(0) // 每行的滤波字节
@@ -45,7 +57,9 @@ export function createPng(width: number, height: number, color: { r: number, g: 
         rawImageData.push(color.r, color.g, color.b) // RGB
       }
     }
-    const compressedData = zlib.deflateSync(Buffer.from(rawImageData))
+    // const compressedData = zlib.deflateSync(Buffer.from(rawImageData))
+    const compressedData = await deflate(Buffer.from(rawImageData))
+
     return createChunk('IDAT', compressedData)
   })()
 
@@ -53,15 +67,5 @@ export function createPng(width: number, height: number, color: { r: number, g: 
   const iendChunk = createChunk('IEND', Buffer.alloc(0))
 
   // 组合所有块
-  return Buffer.concat([pngSignature, ihdrChunk, idatChunk, iendChunk])
-}
-
-function createChunk(type: string, data: Buffer) {
-  const chunk = Buffer.alloc(12 + data.length)
-  chunk.writeUInt32BE(data.length, 0) // 数据长度
-  chunk.write(type, 4) // 数据块类型
-  data.copy(chunk, 8) // 数据内容
-  const crc = calculateCRC(chunk.subarray(4, 8 + data.length)) // 计算 CRC 校验
-  chunk.writeUInt32BE(crc, 8 + data.length) // 写入 CRC
-  return chunk
+  return Buffer.concat([pngSignature, ihdrChunk, await idatChunk, iendChunk])
 }

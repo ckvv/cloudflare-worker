@@ -25,7 +25,7 @@ app.get('/random', async (c) => {
 
   const { w = getRandomInt(1000), h = getRandomInt(1000), r = getRandomInt(255), g = getRandomInt(255), b = getRandomInt(255) } = SCHEMA.png.parse(c.req.query()) || {}
 
-  return c.body(createPng(w, h, { r, g, b }).buffer)
+  return c.body((await createPng(w, h, { r, g, b })).buffer)
 })
 
 app.get('/:w/:h', async (c) => {
@@ -34,7 +34,7 @@ app.get('/:w/:h', async (c) => {
 
   const w = SIZE.parse(c.req.param('w'))
   const h = SIZE.parse(c.req.param('h'))
-  return c.body(createPng(w, h, { r, g, b }).buffer)
+  return c.body((await createPng(w, h, { r, g, b })).buffer)
 })
 
 export default app
