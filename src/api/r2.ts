@@ -13,6 +13,7 @@ const SCHEMA = {
   R2PutOptions: z.object({
     storageClass: z.enum(['Standard', 'InfrequentAccess']).optional(),
   }).optional(),
+  Disposition: z.enum(['inline', 'attachment']).default('inline'),
 }
 
 const app = new Hono<BlankEnv>()
@@ -58,6 +59,7 @@ app.get('/:key{.+}', async (c) => {
   const options: { range?: { offset?: number, length?: number, suffix?: number } } = {}
   const range = c.req.header('range') || ''
 
+  const disposition = SCHEMA.Disposition.parse(c.req.query('disposition'))
   if (range) {
     const [start, end] = range?.slice(6).split('-').map(v => v ? Number.parseInt(v) : undefined)
     if (start !== undefined) {
@@ -79,7 +81,7 @@ app.get('/:key{.+}', async (c) => {
   }
   const filename = result?.customMetadata?.filename
   if (filename) {
-    c.header('Content-Disposition', `inline; filename="${encodeURIComponent(filename)}"`)
+    c.header('Content-Disposition', `${disposition}; filename="${encodeURIComponent(filename)}"`)
   }
 
   c.header('ETag', result.etag)
