@@ -21,6 +21,7 @@ const app = new Hono<BlankEnv>()
 app.get('/', async (c) => {
   const result = await c.env.MY_BUCKET.list(SCHEMA.R2ListOptions.parse(c.req.query()))
   return c.json(result.objects.map(object => ({
+    name: object.customMetadata?.filename,
     key: object.key,
     size: object.size,
     uploaded: object.uploaded,
