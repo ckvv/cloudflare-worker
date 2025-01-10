@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { z } from 'zod'
-import { getRandomInt } from '../utils/index.js'
+import { getRandom, getRandomInt } from '../utils/index.js'
 import { createPng } from '../utils/png.js'
 
 const app = new Hono()
@@ -22,8 +22,8 @@ const SCHEMA = {
 
 app.get('/random', async (c) => {
   c.header('Content-Type', 'image/png')
-
-  const { w = getRandomInt(1000), h = getRandomInt(1000), r = getRandomInt(255), g = getRandomInt(255), b = getRandomInt(255) } = SCHEMA.png.parse(c.req.query()) || {}
+  const base = getRandomInt(1000)
+  const { w = base, h = Number.parseInt(`${base * getRandom(0.4, 1.6)}`), r = getRandomInt(255), g = getRandomInt(255), b = getRandomInt(255) } = SCHEMA.png.parse(c.req.query()) || {}
 
   return c.body((await createPng(w, h, { r, g, b })).buffer)
 })
