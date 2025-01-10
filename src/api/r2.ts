@@ -21,7 +21,6 @@ const app = new Hono<BlankEnv>()
 app.get('/', async (c) => {
   const result = await c.env.MY_BUCKET.list(SCHEMA.R2ListOptions.parse(c.req.query()))
   return c.json(result.objects.map(object => ({
-    name: object.customMetadata?.filename,
     key: object.key,
     size: object.size,
     uploaded: object.uploaded,
@@ -80,11 +79,8 @@ app.get('/:key{.+}', async (c) => {
   if (!result) {
     return c.body(null, 404)
   }
-  const filename = result?.customMetadata?.filename
-  if (filename) {
-    c.header('Content-Disposition', `${disposition}; filename="${encodeURIComponent(filename)}"`)
-  }
 
+  c.header('Content-Disposition', `${disposition}; filename="${encodeURIComponent(result?.customMetadata?.filename || `${c.req.param('key').split('/').pop()}`)}"`)
   c.header('ETag', result.etag)
   c.header('Content-Type', result.customMetadata?.type)
   c.header('Accept-Ranges', 'bytes')
