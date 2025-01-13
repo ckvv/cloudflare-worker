@@ -10,6 +10,12 @@ const SCHEMA = {
   }).optional(),
 }
 
+app.get('/random', async (c) => {
+  c.header('Content-Type', 'image/svg+xml')
+  const options = SCHEMA.GeoPattern.parse(c.req.query())
+  return c.body(GeoPattern.generate(crypto.randomUUID(), options).svg)
+})
+
 app.get('/:filename{.+\\.svg}', async (c) => {
   c.header('Content-Type', 'image/svg+xml')
   const options = SCHEMA.GeoPattern.parse(c.req.query())
