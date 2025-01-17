@@ -28,6 +28,7 @@ app.route('/photos', photos)
 app.get('/', async c => c.json({
   name: packageJSON.name,
   version: packageJSON.version,
+  description: packageJSON.description,
 }))
 
 export default app
