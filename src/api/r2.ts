@@ -20,11 +20,13 @@ const app = new Hono<BlankEnv>()
 
 app.get('/', async (c) => {
   const result = await c.env.MY_BUCKET.list(SCHEMA.R2ListOptions.parse(c.req.query()))
-  return c.json(result.objects.map(object => ({
-    key: object.key,
-    size: object.size,
-    uploaded: object.uploaded,
-  })))
+  return c.json(result.objects.map((object) => {
+    return {
+      key: object.key,
+      size: object.size,
+      uploaded: object.uploaded,
+    }
+  }))
 })
 
 app.post('/:key{.+}', async (c) => {
